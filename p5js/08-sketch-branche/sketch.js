@@ -9,7 +9,7 @@ function setup()
 // --------------------------------------------
 function draw()
 {
-	background(255);
+	background(0); //inversion branche blanche sur fond noir
 	for (var i=listBranches.length-1;i>=0;i--)
 	{
 		listBranches[i].grow();
@@ -22,7 +22,7 @@ function draw()
 // --------------------------------------------
 function mousePressed()
 {
-	var newBranche = new Branche( random( height/2-100, height/2+100) );
+	var newBranche = new Branche( mouseY ); // sera remplacé par msg
 	listBranches.push( newBranche );
 
 }
@@ -37,15 +37,23 @@ function Branche(yin_)
 	this.yin = yin_;
 
 	this.age = 100;
-	this.arrived = false; 
+	this.arrived = false;
 	this.xspeed = random(10,50);
+
+  
 
 	this.grow = function()
 	{
 		if (this.x <= width)
 		{
-			var y = this.yin + 150*noise( 0.01*this.x + this.xoffset );
-			this.points.push( {x : this.x, y : y} );
+			if (this.points.length == 0 ){
+
+      var y = this.yin;
+			this.points.push( {x : this.x, y : y} ); }
+
+      else { var y = this.yin + 150*(2*noise( 0.01*this.x + this.xoffset )-1) ; //noise par rapport à Y
+        console.log(noise( 0.01*this.x + this.xoffset ));
+			this.points.push( {x : this.x, y : y} ); }
 
 			this.x += this.xspeed;
 		}
@@ -62,10 +70,10 @@ function Branche(yin_)
 
 		}
 	}
-	
+
 	this.draw = function()
 	{
-		stroke(0, map(this.age,100,0,255,0));
+		stroke(255, map(this.age,100,0,255,0));
 		for (var i=0 ; i<this.points.length-1; i++)
 		{
 			line( this.points[i].x, this.points[i].y, this.points[i+1].x, this.points[i+1].y);
